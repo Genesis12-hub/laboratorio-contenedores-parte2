@@ -1,0 +1,42 @@
+Comprobación registrada con fecha UTC 8 de noviembre de 2026.
+En America/Bogotá (UTC-5) el reloj marcaba 7 de noviembre de 2026, alrededor de las 21:38.
+La transcripción visible posterior está en docs/validacion-2026-11-07-bogota.txt.
+Máquina remota Ubuntu 24.04.5 LTS, Linux 6.12.113+, proceso 1 tini.
+No es el equipo Windows del estudiante ni WSL.
+
+.NET SDK 10.0.114
+Microsoft.NETCore.App 10.0.14
+Microsoft.AspNetCore.App 10.0.14
+Aspire CLI, Aspire.AppHost.Sdk y paquetes de hosting/cliente 13.6.4
+Docker Engine 29.9.3
+containerd v2.4.2
+runc 1.5.2
+
+dotnet build Laboratorio.slnx
+  Build succeeded. 0 Warning(s). 0 Error(s).
+
+dotnet test Laboratorio.slnx
+  Build succeeded. 0 Warning(s). 0 Error(s).
+  No hay proyecto de pruebas: MSBuild termina y no ejecuta ningún test.
+
+Contenedores publicados solo en 127.0.0.1, con puertos de host elegidos por Aspire:
+  postgres:18.3  127.0.0.1:32770->5432/tcp
+  redis:8.6      127.0.0.1:32768->6379/tcp, 127.0.0.1:32769->6380/tcp
+Conexión a 127.0.0.1:6379: rechazada. No se reutilizó el Redis manual del laboratorio 1.
+
+redis-cli ping (puerto interno sin imprimir la contraseña): PONG
+Redis server v=8.6.8
+SELECT 1 en la base laboratorio: 1
+current_database: laboratorio
+PostgreSQL 18.3 (Debian 18.3-1.pgdg13+1)
+
+GET http://127.0.0.1:5034/        -> 200 {"service":"Laboratorio.Api","status":"running"}
+GET http://127.0.0.1:5034/health  -> 200 Healthy
+GET http://127.0.0.1:5034/alive   -> 200 Healthy
+GET http://127.0.0.1:5034/status  -> 200 {"service":"Laboratorio.Api","redis":"PONG","redisLatencyMs":0.7898,"postgres":"ready"}
+GET https://127.0.0.1:7092/health -> 200 Healthy
+
+La captura docs/capturas/01_aspire_dashboard.png no se modificó.
+SHA-256 9fa11ca723926d20d1b198e6857e3e50f49dd4722d8bf62f3cbb91a956aa54a0
+Es la ventana del 7 de noviembre de 2026, con postgres, laboratorio, redis y laboratorio-api en Running.
+El certificado de desarrollo quedó parcialmente confiado. El token del panel no se guardó.
