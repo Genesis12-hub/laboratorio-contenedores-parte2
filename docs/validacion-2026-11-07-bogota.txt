@@ -1,0 +1,40 @@
+Laboratorio 2 — pruebas en el terminal
+Hora Bogotá: 2026-11-07 21:53:05 -05
+
+$ dotnet build Laboratorio.slnx
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  ServiceDefaults -> /workspace/src/ServiceDefaults/bin/Debug/net10.0/ServiceDefaults.dll
+  Laboratorio.Api -> /workspace/src/Laboratorio.Api/bin/Debug/net10.0/Laboratorio.Api.dll
+  AppHost -> /workspace/infra/AppHost/bin/Debug/net10.0/AppHost.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:02.02
+
+$ curl -sS -w "\nHTTP %{http_code}\n" http://127.0.0.1:5034/health
+Healthy
+HTTP 200
+
+$ curl -sS -w "\nHTTP %{http_code}\n" http://127.0.0.1:5034/alive
+Healthy
+HTTP 200
+
+$ curl -sS -w "\nHTTP %{http_code}\n" http://127.0.0.1:5034/status
+{"service":"Laboratorio.Api","redis":"PONG","redisLatencyMs":0.7303,"postgres":"ready"}
+HTTP 200
+
+Contenedor Redis: redis-ygatxhaj
+Contenedor PostgreSQL: postgres-brmsnhzh
+$ docker exec redis sh -c 'redis-cli -p 6380 -a "$REDIS_PASSWORD" --no-auth-warning ping'
+PONG
+$ docker exec redis redis-server --version
+Redis server v=8.6.8 sha=00000000:1 malloc=jemalloc-5.3.0 bits=64 build=36e433e4c90d8caa
+$ docker exec postgres sh -c 'PGPASSWORD="$POSTGRES_PASSWORD" psql -U postgres -d laboratorio -tAc "SELECT 1"'
+1
+$ docker exec postgres postgres --version
+postgres (PostgreSQL) 18.3 (Debian 18.3-1.pgdg13+1)
+
+FIN_PRUEBAS_VISIBLES

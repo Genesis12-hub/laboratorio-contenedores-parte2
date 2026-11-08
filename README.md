@@ -43,8 +43,8 @@ La API expone `GET /`, `GET /health` (Redis y PostgreSQL), `GET /alive` y `GET /
 | `Laboratorio.Api` y `ServiceDefaults` | Proyectos en `src` | [`Program.cs`](src/Laboratorio.Api/Program.cs), [`Extensions.cs`](src/ServiceDefaults/Extensions.cs) |
 | Referencias entre proyectos | `ProjectReference` y `WithReference` | csproj citados y [`AppHost.cs`](infra/AppHost/AppHost.cs) |
 | Redis y PostgreSQL | `AddRedis`, `AddPostgres` y base `laboratorio` | [`AppHost.cs`](infra/AppHost/AppHost.cs) |
-| Panel con la API, Redis y PostgreSQL en ejecución | Cuatro recursos en Running | [`docs/capturas/01_aspire_dashboard.png`](docs/capturas/01_aspire_dashboard.png) |
-| Salud y conectividad real | HTTP 200, `PONG` y `SELECT 1` | [`docs/validacion-2026-11-08.txt`](docs/validacion-2026-11-08.txt) |
+| Panel con la API, Redis y PostgreSQL en ejecución | Cuatro recursos en Running | [`04_panel_recursos.png`](docs/capturas/04_panel_recursos.png). La captura anterior sigue en [`01_aspire_dashboard.png`](docs/capturas/01_aspire_dashboard.png) |
+| Salud y conectividad real | HTTP 200, `PONG` y `SELECT 1` | [`02_terminal_pruebas.png`](docs/capturas/02_terminal_pruebas.png), [`03_navegador_status.png`](docs/capturas/03_navegador_status.png), [`validacion-2026-11-07-bogota.txt`](docs/validacion-2026-11-07-bogota.txt) |
 
 ## Requisitos y ejecución
 
@@ -72,9 +72,15 @@ curl -fsS http://localhost:5034/status
 
 Las dos comprobaciones se hicieron en Linux Ubuntu 24.04.5 x64 (máquina remota, kernel 6.12.113+). No se ejecutaron en el equipo Windows del estudiante ni en WSL. `systemd` no es el proceso 1 y `policy-rc.d` impide arrancar el servicio, así que Docker se inició con `dockerd` y los puertos publicados quedaron en `127.0.0.1`.
 
-El 7 de noviembre de 2026 el panel mostró `postgres`, `laboratorio`, `redis` y `laboratorio-api` en Running. Esa captura sigue en [`docs/capturas/01_aspire_dashboard.png`](docs/capturas/01_aspire_dashboard.png) (SHA-256 `9fa11ca723926d20d1b198e6857e3e50f49dd4722d8bf62f3cbb91a956aa54a0`). El certificado de desarrollo no quedó del todo confiado, por eso el navegador marca el panel como «Not secure». El token del panel no está en el repositorio. En esa ejecución el SDK era 10.0.114, el runtime 10.0.14, Aspire 13.6.4 y Docker Engine 29.1.3; `GET /health` y `GET /alive` respondieron `200 Healthy`, y `/status` devolvió `PONG` con PostgreSQL listo.
+Las horas de esta sección están en America/Bogotá (UTC−5). El reloj del escritorio de la máquina está en UTC y por eso marca el 8 de noviembre cuando en Bogotá sigue siendo el 7.
 
-El 8 de noviembre de 2026 se repitió el arranque en esta máquina, sin sustituir la captura. El detalle está en [`docs/validacion-2026-11-08.txt`](docs/validacion-2026-11-08.txt): SDK 10.0.114, ASP.NET Core y runtime 10.0.14, Aspire CLI y paquetes 13.6.4, Docker Engine 29.9.3, containerd 2.4.2 y runc 1.5.2. `dotnet build` terminó con 0 advertencias y 0 errores. La solución no tiene proyecto de pruebas: `dotnet test` completa MSBuild y no ejecuta ningún test. Redis 8.6.8 respondió `PONG`, PostgreSQL 18.3 devolvió `1` en la base `laboratorio`, y la API respondió 200 en `/health`, `/alive` y `/status`. El puerto 6379 del host no estaba en uso.
+[`docs/capturas/01_aspire_dashboard.png`](docs/capturas/01_aspire_dashboard.png) es la captura anterior del panel (SHA-256 `9fa11ca723926d20d1b198e6857e3e50f49dd4722d8bf62f3cbb91a956aa54a0`). No se modificó. En esa ejecución el SDK era 10.0.114, el runtime 10.0.14, Aspire 13.6.4 y Docker Engine 29.1.3.
+
+A las 21:53 del 7 de noviembre de 2026 se repitió la prueba con el AppHost en marcha y se fotografió la pantalla. El terminal está en [`docs/capturas/02_terminal_pruebas.png`](docs/capturas/02_terminal_pruebas.png) y el texto copiado en [`docs/validacion-2026-11-07-bogota.txt`](docs/validacion-2026-11-07-bogota.txt): `dotnet build` terminó con 0 advertencias y 0 errores; `/health` y `/alive` respondieron `Healthy` con HTTP 200; `/status` respondió HTTP 200 con `PONG` y `postgres` `ready` (latencia 0.7303 ms en esa llamada). Redis 8.6.8 contestó `PONG` y PostgreSQL 18.3 devolvió `1` en la base `laboratorio`. No hay proyecto de pruebas: no se presenta `dotnet test` como una suite aprobada.
+
+El navegador, en [`docs/capturas/03_navegador_status.png`](docs/capturas/03_navegador_status.png), abrió `http://127.0.0.1:5034/status` y mostró el JSON real de otra llamada (`redisLatencyMs` 0.6836). El panel de esa misma ejecución está en [`docs/capturas/04_panel_recursos.png`](docs/capturas/04_panel_recursos.png): `postgres`, `laboratorio`, `redis` y `laboratorio-api` en Running, con `https://localhost:17023` marcado «Not secure». El comando de Redis aparece cortado (`--requirepass $REDI…`) y no muestra la contraseña. El token del panel no está en las capturas.
+
+[`docs/validacion-2026-11-08.txt`](docs/validacion-2026-11-08.txt) es la transcripción anterior. El nombre del archivo usa la fecha UTC; en Bogotá esa corrida fue el 7 de noviembre, alrededor de las 21:38. SDK 10.0.114, runtime 10.0.14, Aspire 13.6.4, Docker Engine 29.9.3, containerd 2.4.2 y runc 1.5.2. El puerto 6379 del host no estaba en uso.
 
 ## Entrega
 

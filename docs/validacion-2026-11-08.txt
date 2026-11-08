@@ -1,4 +1,6 @@
-Comprobación del 8 de noviembre de 2026.
+Comprobación registrada con fecha UTC 8 de noviembre de 2026.
+En America/Bogotá (UTC-5) el reloj marcaba 7 de noviembre de 2026, alrededor de las 21:38.
+La transcripción visible posterior está en docs/validacion-2026-11-07-bogota.txt.
 Máquina remota Ubuntu 24.04.5 LTS, Linux 6.12.113+, proceso 1 tini.
 No es el equipo Windows del estudiante ni WSL.
 
